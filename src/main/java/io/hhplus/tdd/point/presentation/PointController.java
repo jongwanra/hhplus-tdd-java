@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.hhplus.tdd.point.application.PointChargeService;
+import io.hhplus.tdd.point.application.PointReadByIdService;
 import io.hhplus.tdd.point.application.PointUseService;
 import io.hhplus.tdd.point.domain.PointHistory;
 import io.hhplus.tdd.point.domain.UserPoint;
@@ -28,15 +29,17 @@ public class PointController {
 	private static final Logger log = LoggerFactory.getLogger(PointController.class);
 	private final PointChargeService pointChargeService;
 	private final PointUseService pointUseService;
+	private final PointReadByIdService pointReadByIdService;
 
 	/**
 	 * TODO - 특정 유저의 포인트를 조회하는 기능을 작성해주세요.
 	 */
 	@GetMapping("{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public UserPoint point(
 		@PathVariable("id") long id
 	) {
-		return new UserPoint(0, 0, 0);
+		return pointReadByIdService.read(id);
 	}
 
 	/**
