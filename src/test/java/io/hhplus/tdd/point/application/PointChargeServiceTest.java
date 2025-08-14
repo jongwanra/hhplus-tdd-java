@@ -3,9 +3,9 @@ package io.hhplus.tdd.point.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -13,17 +13,21 @@ import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.global.exception.ApplicationException;
 import io.hhplus.tdd.point.domain.PointHistory;
-import io.hhplus.tdd.point.domain.enums.TransactionType;
 import io.hhplus.tdd.point.domain.UserPoint;
+import io.hhplus.tdd.point.domain.enums.TransactionType;
 
 @ExtendWith(MockitoExtension.class)
 public class PointChargeServiceTest {
-	@InjectMocks
 	private PointChargeService pointChargeService;
 	@Mock
 	private PointHistoryTable pointHistoryTable;
 	@Mock
 	private UserPointTable userPointTable;
+
+	@BeforeEach
+	void setUp() {
+		pointChargeService = new NonThreadSafePointChargeService(pointHistoryTable, userPointTable);
+	}
 
 	/**
 	 * [작성 이유]
@@ -56,7 +60,8 @@ public class PointChargeServiceTest {
 				.build());
 
 		// when
-		PointChargeService.Command command = new PointChargeService.Command(userId, amount, currentTimeMillis);
+		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+			currentTimeMillis);
 		UserPoint userPoint = pointChargeService.execute(command);
 
 		// then
@@ -79,7 +84,8 @@ public class PointChargeServiceTest {
 		given(userPointTable.selectById(userId))
 			.willReturn(UserPoint.empty(userId));
 
-		PointChargeService.Command command = new PointChargeService.Command(userId, amount, currentTimeMillis);
+		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+			currentTimeMillis);
 
 		// when & then
 		assertThatThrownBy(() -> {
@@ -109,7 +115,8 @@ public class PointChargeServiceTest {
 				.point(currentPoint)
 				.build());
 
-		PointChargeService.Command command = new PointChargeService.Command(userId, amount, currentTimeMillis);
+		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+			currentTimeMillis);
 
 		// when & then
 		assertThatThrownBy(() -> {
@@ -132,7 +139,8 @@ public class PointChargeServiceTest {
 		given(userPointTable.selectById(userId))
 			.willReturn(UserPoint.empty(122L));
 
-		PointChargeService.Command command = new PointChargeService.Command(userId, amount, currentTimeMillis);
+		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+			currentTimeMillis);
 
 		// when & then
 		assertThatThrownBy(() -> {
