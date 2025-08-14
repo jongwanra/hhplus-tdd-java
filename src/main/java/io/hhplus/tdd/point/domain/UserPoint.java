@@ -44,6 +44,8 @@ public record UserPoint(
 
 	private void validateUse(long amount) {
 		if (amount > MAXIMUM_USABLE_POINT) {
+			// 큰 숫자를 보기 편하도록 세자리 마다 쉼표를 추가했습니다.
+			// ex. 10000 -> 10,000
 			final String formattedMaximumUsablePoint = NumberFormat.getNumberInstance().format(MAXIMUM_USABLE_POINT);
 			throw new ApplicationException(formattedMaximumUsablePoint + " 포인트를 초과하여 사용할 수 없습니다.");
 		}

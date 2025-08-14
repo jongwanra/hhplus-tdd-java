@@ -9,6 +9,11 @@ import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.point.domain.PointHistory;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * 포인트 충전/사용 내역 목록을 조회합니다.
+ * PointHistory의 id값을 기준으로 내림차순 정렬했습니다.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class PointHistoryReadAllByUserIdService {

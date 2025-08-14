@@ -7,6 +7,9 @@ import io.hhplus.tdd.point.domain.enums.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Thread-Safe 하지 않은 포인트 충전 서비스입니다.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class NonThreadSafePointChargeService implements PointChargeService {
