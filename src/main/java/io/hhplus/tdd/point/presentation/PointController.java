@@ -2,8 +2,6 @@ package io.hhplus.tdd.point.presentation;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/point")
 @RequiredArgsConstructor
 public class PointController {
-	private static final Logger log = LoggerFactory.getLogger(PointController.class);
 	private final PointChargeService pointChargeService;
 	private final PointUseService pointUseService;
 	private final PointReadByIdService pointReadByIdService;

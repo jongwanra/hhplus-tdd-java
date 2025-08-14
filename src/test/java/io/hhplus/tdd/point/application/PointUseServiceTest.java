@@ -3,9 +3,9 @@ package io.hhplus.tdd.point.application;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -18,12 +18,16 @@ import io.hhplus.tdd.point.domain.enums.TransactionType;
 
 @ExtendWith(MockitoExtension.class)
 class PointUseServiceTest {
-	@InjectMocks
 	private PointUseService pointUseService;
 	@Mock
 	private PointHistoryTable pointHistoryTable;
 	@Mock
 	private UserPointTable userPointTable;
+
+	@BeforeEach
+	void setUp() {
+		pointUseService = new ReentrantLockedPointUseService(userPointTable, pointHistoryTable);
+	}
 
 	/**
 	 * [작성 이유]
@@ -65,7 +69,8 @@ class PointUseServiceTest {
 			);
 
 		// when
-		UserPoint userPoint = pointUseService.execute(new PointUseService.Command(userId, amount, currentTimeMillis));
+		UserPoint userPoint = pointUseService.execute(
+			new ReentrantLockedPointUseService.Command(userId, amount, currentTimeMillis));
 
 		// then
 		assertThat(userPoint.point()).isEqualTo(newPointBalance);
@@ -96,7 +101,7 @@ class PointUseServiceTest {
 
 		// when & then
 		assertThatThrownBy(() -> {
-			pointUseService.execute(new PointUseService.Command(userId, amountToUse, currentTimeMillis));
+			pointUseService.execute(new ReentrantLockedPointUseService.Command(userId, amountToUse, currentTimeMillis));
 		})
 			.isInstanceOf(ApplicationException.class)
 			.hasMessage("보유하고 있는 포인트 보다 많은 포인트를 사용할 수 없습니다.");
@@ -124,7 +129,7 @@ class PointUseServiceTest {
 
 		// when & then
 		assertThatThrownBy(() -> {
-			pointUseService.execute(new PointUseService.Command(userId, amountToUse, currentTimeMillis));
+			pointUseService.execute(new ReentrantLockedPointUseService.Command(userId, amountToUse, currentTimeMillis));
 		})
 			.isInstanceOf(ApplicationException.class)
 			.hasMessage("1 포인트 미만으로 포인트를 사용할 수 없습니다.");
@@ -152,7 +157,7 @@ class PointUseServiceTest {
 
 		// when & then
 		assertThatThrownBy(() -> {
-			pointUseService.execute(new PointUseService.Command(userId, amountToUse, currentTimeMillis));
+			pointUseService.execute(new ReentrantLockedPointUseService.Command(userId, amountToUse, currentTimeMillis));
 		})
 			.isInstanceOf(ApplicationException.class)
 			.hasMessage("1,000,000 포인트를 초과하여 사용할 수 없습니다.");

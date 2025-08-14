@@ -1,12 +1,12 @@
 package io.hhplus.tdd.point.presentation.request;
 
-import io.hhplus.tdd.point.application.PointUseService;
+import io.hhplus.tdd.point.application.ReentrantLockedPointUseService;
 
 public record PointUseRequest(
 	long amount
 ) {
-	public PointUseService.Command toCommand(long userId) {
-		return new PointUseService.Command(
+	public ReentrantLockedPointUseService.Command toCommand(long userId) {
+		return new ReentrantLockedPointUseService.Command(
 			userId,
 			amount,
 			System.currentTimeMillis()

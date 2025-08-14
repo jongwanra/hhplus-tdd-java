@@ -25,7 +25,7 @@ class PointUseServiceIntegrationTest {
 	void setUp() {
 		pointHistoryTable = new PointHistoryTable();
 		userPointTable = new UserPointTable();
-		pointUseService = new PointUseService(userPointTable, pointHistoryTable);
+		pointUseService = new ReentrantLockedPointUseService(userPointTable, pointHistoryTable);
 	}
 
 	/**
@@ -47,7 +47,7 @@ class PointUseServiceIntegrationTest {
 		// when
 		IntStream.range(0, threadCount)
 			.forEach((index) -> executorService.execute(() -> {
-				pointUseService.execute(new PointUseService.Command(
+				pointUseService.execute(new ReentrantLockedPointUseService.Command(
 					userId, amount, System.currentTimeMillis()
 				));
 				countDownLatch.countDown();
@@ -88,7 +88,7 @@ class PointUseServiceIntegrationTest {
 		IntStream.range(1, threadCount + 1)
 			.forEach((userId) -> executorService.execute(() -> {
 				// user 마다 5,000 포인트씩 사용한다.
-				pointUseService.execute(new PointUseService.Command(
+				pointUseService.execute(new ReentrantLockedPointUseService.Command(
 					userId, amountToUse, System.currentTimeMillis()
 				));
 				countDownLatch.countDown();
