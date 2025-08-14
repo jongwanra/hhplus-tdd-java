@@ -26,7 +26,7 @@ public class PointChargeServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		pointChargeService = new NonThreadSafePointChargeService(pointHistoryTable, userPointTable);
+		pointChargeService = new ReentrantLockedPointChargeService(pointHistoryTable, userPointTable);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class PointChargeServiceTest {
 				.build());
 
 		// when
-		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+		PointChargeService.Command command = new PointChargeService.Command(userId, amount,
 			currentTimeMillis);
 		UserPoint userPoint = pointChargeService.execute(command);
 
@@ -84,7 +84,7 @@ public class PointChargeServiceTest {
 		given(userPointTable.selectById(userId))
 			.willReturn(UserPoint.empty(userId));
 
-		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+		PointChargeService.Command command = new PointChargeService.Command(userId, amount,
 			currentTimeMillis);
 
 		// when & then
@@ -115,7 +115,7 @@ public class PointChargeServiceTest {
 				.point(currentPoint)
 				.build());
 
-		NonThreadSafePointChargeService.Command command = new NonThreadSafePointChargeService.Command(userId, amount,
+		PointChargeService.Command command = new PointChargeService.Command(userId, amount,
 			currentTimeMillis);
 
 		// when & then
